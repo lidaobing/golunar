@@ -6,9 +6,14 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"flag"
+	"strings"
 
 	cc "github.com/lidaobing/chinese_calendar"
   )
+
+var inverse = flag.Bool("i", false, "from lunar to solar")
+var leap = flag.Bool("l", false, "leap month")
 
 func printToday() {
 	today := cc.Today()
@@ -16,10 +21,28 @@ func printToday() {
 }
 
 func printHelp() {
-	fmt.Printf("Usage: %s [YEAR MONTH DAY]\n", path.Base(os.Args[0]))
+	fmt.Printf("Usage: %s today\n", path.Base(os.Args[0]))
+	fmt.Printf("Usage: %s [options] [YEAR MONTH DAY]\n", path.Base(os.Args[0]))
+	fmt.Printf("\n")
+	fmt.Printf("Options:\n")
+	flag.PrintDefaults()
 }
 
-func printChineseCalendar2(year, month, day int) (err error) {
+func printSolarCalendar(year, month, day int, isLeap bool) (err error) {
+	var res cc.ChineseCalendar
+	res.Year = year
+	res.Month = month
+	res.Day = day
+	res.IsLeapMonth = isLeap
+	t, err := res.ToTime()
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Result: %s\n", t)
+	return nil
+}	
+
+func printChineseCalendar(year, month, day int) (err error) {
 	res, err := cc.FromSolarDate(year, month, day)
 	if err != nil {
 		return err
@@ -28,36 +51,54 @@ func printChineseCalendar2(year, month, day int) (err error) {
 	return nil
 }
 
-func printChineseCalendar(year, month, day string) (err error) {
-	year2, err := strconv.Atoi(year)
+func str2int(year, month, day string) (year2, month2, day2 int, err error) {
+	year2, err = strconv.Atoi(year)
 	if err != nil {
-		return err
+		return
 	}
 
-	month2, err := strconv.Atoi(month)
+	month2, err = strconv.Atoi(month)
 	if err != nil {
-		return err
+		return
 	}
 
-	day2, err := strconv.Atoi(day)
+	day2, err = strconv.Atoi(day)
 	if err != nil {
-		return err
+		return
 	}
-
-	return printChineseCalendar2(year2, month2, day2)
+	return
 }
 
+
 func main() {
-	if len(os.Args) == 1 {
+	flag.Usage = func() {
+		printHelp()
+	}
+
+	flag.Parse()
+
+	if len(flag.Args()) == 1 && strings.ToUpper(flag.Arg(0)) == "TODAY" {
 		printToday()
 		return
 	}
-	if len(os.Args) != 4 {
+
+	if len(flag.Args()) != 3 {
 		printHelp()
 		os.Exit(2)
 	}
 
-	err := printChineseCalendar(os.Args[1], os.Args[2], os.Args[3])
+	year2, month2, day2, err := str2int(flag.Args()[0], flag.Args()[1], flag.Args()[2])
+	
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		os.Exit(1)
+	}
+
+	if(*inverse) {
+		err = printSolarCalendar(year2, month2, day2, *leap)		
+	}  else {
+		err = printChineseCalendar(year2, month2, day2)
+	}
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		os.Exit(1)
