@@ -1,6 +1,13 @@
 {
 	"comment": "",
 	"ignore": "test",
-	"package": [],
+	"package": [
+		{
+			"checksumSHA1": "Ucr0gKnJsPAsHmZjo2jlbeLSDp4=",
+			"path": "github.com/lidaobing/chinese_calendar",
+			"revision": "d954434747bb1e1b0a2c9b330e6fd3a2939bc8d2",
+			"revisionTime": "2014-02-03T14:37:10Z"
+		}
+	],
 	"rootPath": "github.com/lidaobing/golunar"
 }
