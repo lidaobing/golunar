@@ -1,5 +1,7 @@
 # golunar
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/lidaobing/golunar)](https://goreportcard.com/report/github.com/lidaobing/golunar)
+
 ## Install
 
 ```shell
