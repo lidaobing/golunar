@@ -6,7 +6,7 @@
 ## Install
 
 ```shell
-go get -u github.com/lidaobing/golunar
+go install github.com/lidaobing/golunar@latest
 ```
 
 ## Usage

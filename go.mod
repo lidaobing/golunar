@@ -1,5 +1,5 @@
 module github.com/lidaobing/golunar
 
-go 1.12
+go 1.21
 
-require github.com/lidaobing/chinese_calendar v0.0.1
+require github.com/lidaobing/chinese_calendar v0.0.2
